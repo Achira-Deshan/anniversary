@@ -97,6 +97,15 @@
             border-color: rgba(255, 255, 255, 0.9);
         }
 
+}
+@media (max-width: 768px) {
+    .glass-card {
+        backdrop-filter: blur(15px) saturate(150%);
+    }
+    .envelope, .love-letter {
+        backdrop-filter: blur(15px);
+    }
+}
         /* Gradient Text */
         .text-gradient-main {
             background: linear-gradient(to right, #ff5858, #f09819);
@@ -180,6 +189,13 @@
             z-index: 9999;
             transition: transform 0.1s ease;
         }
+
+/* Hide custom cursor on mobile/touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .custom-cursor { 
+        display: none !important; 
+    }
+}
 
         /* Music Player */
         .music-player {
@@ -427,7 +443,8 @@
 
 .gallery-item img {
     width: 100%;
-    height: 300px;
+    height: auto;        /* change from fixed 300px */
+    max-height: 300px;   /* optional: keep max height */
     object-fit: cover;
     display: block;
     -webkit-touch-callout: none;
@@ -800,16 +817,17 @@ function toggleMusic() {
             }
         }
         
-        // Preload audio on first user interaction (mobile fix)
-        let audioReady = false;
-        function prepareAudio() {
-            if (!audioReady) {
-                music.load();
-                audioReady = true;
-            }
-        }
-        document.addEventListener('touchstart', prepareAudio, { once: true });
-        document.addEventListener('click', prepareAudio, { once: true });
+// Preload audio on first user interaction (mobile fix)
+let audioReady = false;
+function prepareAudio() {
+    if (!audioReady) {
+        music.load();               // load the audio
+        music.play().catch(() => {}); // try to start it immediately
+        audioReady = true;
+    }
+}
+document.addEventListener('touchstart', prepareAudio, { once: true });
+document.addEventListener('click', prepareAudio, { once: true });
 
         // Reveal Envelope
         function revealEnvelope() {
